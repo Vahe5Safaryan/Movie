@@ -1,17 +1,15 @@
-import {useEffect, useMemo, useState} from "react";
-import {createTheme, Theme} from "@mui/material";
+import { useEffect, useMemo, useState } from "react";
+import { createTheme, Theme } from "@mui/material";
 
-const useTheme = ():[Theme, boolean, () => void] => {
-    const [darkMode, setDarkMode] = useState(true);
+const useTheme = (): [Theme, boolean, () => void] => {
+    const [darkMode, setDarkMode] = useState<boolean>(() => {
+        const savedDarkMode = localStorage.getItem("darkMode");
+        return savedDarkMode ? JSON.parse(savedDarkMode) : true;
+    });
 
     useEffect(() => {
-        const savedDarkMode = localStorage.getItem("darkMode");
-        if (savedDarkMode !== null) {
-            setDarkMode(JSON.parse(savedDarkMode));
-        } else {
-            setDarkMode(true);
-        }
-    }, []);
+        localStorage.setItem("darkMode", JSON.stringify(darkMode));
+    }, [darkMode]);
 
     const theme = useMemo(
         () =>
@@ -22,14 +20,10 @@ const useTheme = ():[Theme, boolean, () => void] => {
             }),
         [darkMode]
     );
-
     const toggleDarkMode = () => {
-        const newDarkMode = !darkMode;
-        setDarkMode(newDarkMode);
-        localStorage.setItem("darkMode", JSON.stringify(newDarkMode));
+        setDarkMode((prev) => !prev);
     };
-
     return [theme, darkMode, toggleDarkMode];
-}
+};
 
 export default useTheme;

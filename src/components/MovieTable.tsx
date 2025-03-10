@@ -1,11 +1,15 @@
-import React, {useState, useEffect} from "react";
-import {DataGrid, GridColDef} from "@mui/x-data-grid";
-import {Modal, Box, Typography} from "@mui/material";
-import {fetchMovies} from "../api/api";
-import {Movie} from "../types/Movie.Interface";
+import React, { useState, useEffect, useMemo } from "react";
+import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { Modal, Box, Typography, TextField } from "@mui/material";
+import { fetchMovies } from "../api/api";
+import { Movie } from "../types/Movie.Interface";
 
 const MovieTable: React.FC = () => {
     const [movies, setMovies] = useState<Movie[]>([]);
+    const [searchQuery, setSearchQuery] = useState<string>(() => {
+        const savedQuery = localStorage.getItem("searchQuery");
+        return savedQuery ? savedQuery : "";
+    });
     const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
     const [open, setOpen] = useState(false);
 
@@ -16,9 +20,22 @@ const MovieTable: React.FC = () => {
 
     useEffect(() => {
         fetchMovies()
-            .then(setMovies)
+            .then((data) => {
+                setMovies(data);
+                localStorage.setItem("movies", JSON.stringify(data));
+            })
             .catch((error) => console.error("Failed to fetch movies:", error));
     }, []);
+
+    useEffect(() => {
+        localStorage.setItem("searchQuery", searchQuery);
+    }, [searchQuery]);
+
+    const filteredMovies = useMemo(() => {
+        return movies.filter(movie =>
+            movie.title.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+    }, [movies, searchQuery]);
 
     const columns: GridColDef[] = [
         {
@@ -29,7 +46,7 @@ const MovieTable: React.FC = () => {
                 <img
                     src={params.value}
                     alt={params.row.title}
-                    style={{width: 80, height: 'auto', cursor: 'pointer'}}
+                    style={{ width: 80, height: 'auto', cursor: 'pointer' }}
                     onClick={() => {
                         setSelectedMovie(params.row);
                         setOpen(true);
@@ -37,16 +54,25 @@ const MovieTable: React.FC = () => {
                 />
             ),
         },
-        {field: "title", headerName: "Title", width: 200},
-        {field: "release_date", headerName: "Release date", width: 150},
-        {field: "rating", headerName: "Rating", width: 100, type: "number"},
-        {field: "genres", headerName: "Genres", width: 150},
+        { field: "title", headerName: "Title", width: 200 },
+        { field: "release_date", headerName: "Release date", width: 150 },
+        { field: "rating", headerName: "Rating", width: 100, type: "number" },
+        { field: "genres", headerName: "Genres", width: 150 },
     ];
 
     return (
         <>
+            <TextField
+                label="Search"
+                variant="outlined"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                fullWidth
+                sx={{ mb: 2 }}
+            />
+
             <DataGrid
-                rows={movies}
+                rows={filteredMovies}
                 columns={columns}
                 paginationModel={paginationModel}
                 onPaginationModelChange={setPaginationModel}
@@ -72,7 +98,7 @@ const MovieTable: React.FC = () => {
                     {selectedMovie && (
                         <>
                             <img src={selectedMovie.poster} alt={selectedMovie.title}
-                                 style={{width: '100%', marginBottom: 15}}/>
+                                 style={{ width: '100%', marginBottom: 15 }} />
                             <Typography variant="h6">{selectedMovie.title}</Typography>
                             <Typography>Release date: {selectedMovie.release_date}</Typography>
                             <Typography>Rating: {selectedMovie.rating}</Typography>
