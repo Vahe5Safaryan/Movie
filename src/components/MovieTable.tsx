@@ -1,48 +1,27 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import { ThemeProvider, createTheme, CssBaseline } from "@mui/material";
+import { ThemeProvider, CssBaseline } from "@mui/material";
 import { Modal, Box, Button, Typography } from "@mui/material";
-import { fetchMovies, Movie } from "./api/api";
+import { fetchMovies } from "../api/api";
+import {Movie} from "../types/Movie.Interface";
+import useTheme from "../hooks/useTheme";
 
 const MovieTable: React.FC = () => {
-    const [darkMode, setDarkMode] = useState(true);
-
-    useEffect(() => {
-        const savedDarkMode = localStorage.getItem("darkMode");
-        if (savedDarkMode !== null) {
-            setDarkMode(JSON.parse(savedDarkMode));
-        } else {
-            setDarkMode(true);
-        }
-
-        fetchMovies()
-            .then(setMovies)
-            .catch((error) => console.error("Failed to fetch movies:", error));
-    }, []);
-
     const [movies, setMovies] = useState<Movie[]>([]);
+
     const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
+
     const [open, setOpen] = useState(false);
     const [paginationModel, setPaginationModel] = useState({
         pageSize: 5,
         page: 0,
     });
 
-    const theme = useMemo(
-        () =>
-            createTheme({
-                palette: {
-                    mode: darkMode ? "dark" : "light",
-                },
-            }),
-        [darkMode]
-    );
-
-    const toggleDarkMode = () => {
-        const newDarkMode = !darkMode;
-        setDarkMode(newDarkMode);
-        localStorage.setItem("darkMode", JSON.stringify(newDarkMode));
-    };
+    useEffect(() => {
+        fetchMovies()
+            .then(setMovies)
+            .catch((error) => console.error("Failed to fetch movies:", error));
+    }, []);
 
     const columns: GridColDef[] = [
         {
@@ -67,11 +46,12 @@ const MovieTable: React.FC = () => {
         { field: "genres", headerName: "Genres", width: 150 },
     ];
 
+    const [theme, darkMode, toggleDarkMode] = useTheme();
+
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />
             <div style={{ padding: 15 }}>
-                {/* Кнопка для переключения темы */}
                 <Button
                     style={{ margin: 15 }}
                     variant="contained"
@@ -84,7 +64,6 @@ const MovieTable: React.FC = () => {
                 <DataGrid
                     rows={movies}
                     columns={columns}
-                    autoHeight
                     paginationModel={paginationModel}
                     onPaginationModelChange={setPaginationModel}
                     pageSizeOptions={[5, 10, 20, 40]}
