@@ -1,0 +1,44 @@
+[33mcommit 0dfea2fc9468144486d457a98ce6f276ab263e51[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m)[m
+Author: Vahe <vsafaryan50@gmail.com>
+Date:   Mon Mar 10 10:20:15 2025 -0700
+
+    Movie
+
+ package-lock.json             | 574 [32m++++++++++++++++++++++++++++++++++++++++++[m
+ package.json                  |   5 [32m+[m
+ src/App.tsx                   |  23 [32m+[m[31m-[m
+ src/components/MovieTable.tsx | 125 [32m+++++++++[m
+ src/components/api/api.ts     |  62 [32m+++++[m
+ src/logo.svg                  |   1 [31m-[m
+ 6 files changed, 772 insertions(+), 18 deletions(-)
+
+[33mcommit 2d01828eeb80b110d5c1e217da867703d8dc82cf[m
+Author: Vahe <vsafaryan50@gmail.com>
+Date:   Mon Mar 10 07:08:40 2025 -0700
+
+    Initialize project using Create React App
+
+ .gitignore             |    23 [32m+[m
+ .idea/.gitignore       |     8 [32m+[m
+ .idea/modules.xml      |     8 [32m+[m
+ .idea/table.iml        |    13 [32m+[m
+ README.md              |    46 [32m+[m
+ package-lock.json      | 17581 [32m+++++++++++++++++++++++++++++++++++++++++++++++[m
+ package.json           |    44 [32m+[m
+ public/favicon.ico     |   Bin [31m0[m -> [32m3870[m bytes
+ public/index.html      |    43 [32m+[m
+ public/logo192.png     |   Bin [31m0[m -> [32m5347[m bytes
+ public/logo512.png     |   Bin [31m0[m -> [32m9664[m bytes
+ public/manifest.json   |    25 [32m+[m
+ public/robots.txt      |     3 [32m+[m
+ src/App.css            |    38 [32m+[m
+ src/App.test.tsx       |     9 [32m+[m
+ src/App.tsx            |    26 [32m+[m
+ src/index.css          |    13 [32m+[m
+ src/index.tsx          |    19 [32m+[m
+ src/logo.svg           |     1 [32m+[m
+ src/react-app-env.d.ts |     1 [32m+[m
+ src/reportWebVitals.ts |    15 [32m+[m
+ src/setupTests.ts      |     5 [32m+[m
+ tsconfig.json          |    26 [32m+[m
+ 23 files changed, 17947 insertions(+)

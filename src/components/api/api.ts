@@ -12,7 +12,6 @@ export interface Genre {
     name: string;
 }
 
-
 const apiKey = "1be86dc7b91cb6a46c1a3868d35979b4";
 
 export const fetchGenres = async (): Promise<Genre[]> => {
@@ -32,7 +31,6 @@ export const fetchMovies = async (): Promise<Movie[]> => {
     const url = `https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}&page=3`;
 
     try {
-
         const [moviesResponse, genres] = await Promise.all([
             fetch(url),
             fetchGenres(),
