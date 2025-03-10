@@ -11,6 +11,7 @@ In the project directory, you can run:
 
 In the project directory, you can run:
 
-1. `npm install`
-2. `npm build`
+1. create `.env.local` with right accesses
+2. `npm install`
+3. `npm build`
 
